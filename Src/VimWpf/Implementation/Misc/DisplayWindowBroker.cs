@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Threading;
 
 namespace Vim.UI.Wpf.Implementation.Misc
 {
@@ -11,6 +12,7 @@ namespace Vim.UI.Wpf.Implementation.Misc
     internal sealed class DisplayWindowBroker : IDisplayWindowBroker
     {
         private readonly ITextView _textView;
+        private readonly JoinableTaskFactory _joinableTaskFactory;
         private readonly ICompletionBroker _completionBroker;
         private readonly ISignatureHelpBroker _signatureHelpBroker;
 #if VS_SPECIFIC_2017
@@ -22,11 +24,13 @@ namespace Vim.UI.Wpf.Implementation.Misc
 #if VS_SPECIFIC_2017
         internal DisplayWindowBroker(
             ITextView textView,
+            JoinableTaskFactory joinableTaskFactory,
             ICompletionBroker completionBroker,
             ISignatureHelpBroker signatureHelpBroker,
             IQuickInfoBroker quickInfoBroker)
         {
             _textView = textView;
+            _joinableTaskFactory = joinableTaskFactory;
             _completionBroker = completionBroker;
             _signatureHelpBroker = signatureHelpBroker;
             _quickInfoBroker = quickInfoBroker;
@@ -34,11 +38,13 @@ namespace Vim.UI.Wpf.Implementation.Misc
 #else
         internal DisplayWindowBroker(
             ITextView textView,
+            JoinableTaskFactory joinableTaskFactory,
             ICompletionBroker completionBroker,
             ISignatureHelpBroker signatureHelpBroker,
             IAsyncQuickInfoBroker quickInfoBroker)
         {
             _textView = textView;
+            _joinableTaskFactory = joinableTaskFactory;
             _completionBroker = completionBroker;
             _signatureHelpBroker = signatureHelpBroker;
             _quickInfoBroker = quickInfoBroker;
@@ -91,7 +97,7 @@ namespace Vim.UI.Wpf.Implementation.Misc
                 var session = _quickInfoBroker.GetSession(_textView);
                 if (session is object)
                 {
-                    session.DismissAsync().Wait();
+                    _joinableTaskFactory.Run(() => session.DismissAsync());
                 }
 #endif
             }
@@ -105,6 +111,7 @@ namespace Vim.UI.Wpf.Implementation.Misc
     {
         private static readonly object s_key = new object();
 
+        private readonly IJoinableTaskFactoryProvider _joinableTaskFactoryProvider;
         private readonly ICompletionBroker _completionBroker;
         private readonly ISignatureHelpBroker _signatureHelpBroker;
 #if VS_SPECIFIC_2017
@@ -116,10 +123,12 @@ namespace Vim.UI.Wpf.Implementation.Misc
 #if VS_SPECIFIC_2017
         [ImportingConstructor]
         internal DisplayWindowBrokerFactoryService(
+            IJoinableTaskFactoryProvider joinableTaskFactoryProvider,
             ICompletionBroker completionBroker,
             ISignatureHelpBroker signatureHelpBroker,
             IQuickInfoBroker quickInfoBroker)
         {
+            _joinableTaskFactoryProvider = joinableTaskFactoryProvider;
             _completionBroker = completionBroker;
             _signatureHelpBroker = signatureHelpBroker;
             _quickInfoBroker = quickInfoBroker;
@@ -127,10 +136,12 @@ namespace Vim.UI.Wpf.Implementation.Misc
 #else
         [ImportingConstructor]
         internal DisplayWindowBrokerFactoryService(
+            IJoinableTaskFactoryProvider joinableTaskFactoryProvider,
             ICompletionBroker completionBroker,
             ISignatureHelpBroker signatureHelpBroker,
             IAsyncQuickInfoBroker quickInfoBroker)
         {
+            _joinableTaskFactoryProvider = joinableTaskFactoryProvider;
             _completionBroker = completionBroker;
             _signatureHelpBroker = signatureHelpBroker;
             _quickInfoBroker = quickInfoBroker;
@@ -143,6 +154,7 @@ namespace Vim.UI.Wpf.Implementation.Misc
                 s_key,
                 () => new DisplayWindowBroker(
                         textView,
+                        _joinableTaskFactoryProvider.JoinableTaskFactory,
                         _completionBroker,
                         _signatureHelpBroker,
                         _quickInfoBroker));

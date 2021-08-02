@@ -5,8 +5,9 @@ using Microsoft.VisualStudio.Text.Editor;
 using Moq;
 using Xunit;
 using Vim.UI.Wpf.Implementation.Misc;
+using Microsoft.VisualStudio.Threading;
 
-#pragma warning disable CS0618 
+#pragma warning disable CS0618
 namespace Vim.UI.Wpf.UnitTest
 {
     public class DisplayWindowBrokerTest
@@ -34,6 +35,7 @@ namespace Vim.UI.Wpf.UnitTest
             _textView = new Mock<ITextView>();
             _brokerRaw = new DisplayWindowBroker(
                 _textView.Object,
+                new Mock<JoinableTaskFactory>().Object,
                 _completionBroker.Object,
                 _signatureBroker.Object,
                 _quickInfoBroker.Object);
