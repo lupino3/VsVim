@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.Text.Operations;
 using Vim.Extensions;
 using Vim.Interpreter;
 using System.Windows.Threading;
+using Microsoft.VisualStudio.Threading;
 
 namespace Vim.UI.Wpf
 {
@@ -24,6 +25,7 @@ namespace Vim.UI.Wpf
         private readonly ITextEditorFactoryService _textEditorFactoryService;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
         private readonly IEditorOperationsFactoryService _editorOperationsFactoryService;
+        private readonly JoinableTaskFactory _joinableTaskFactory;
         private readonly List<ITextView> _textViewList = new List<ITextView>();
         private event EventHandler<TextViewEventArgs> _isVisibleChanged;
         private event EventHandler<TextViewChangedEventArgs> _activeTextViewChanged;
@@ -79,18 +81,25 @@ namespace Vim.UI.Wpf
             get { return false; }
         }
 
+        public JoinableTaskFactory JoinableTaskFactory
+        {
+            get { return _joinableTaskFactory; }
+        }
+
         protected VimHost(
             IProtectedOperations protectedOperations,
             ITextBufferFactoryService textBufferFactoryService,
             ITextEditorFactoryService textEditorFactoryService,
             ITextDocumentFactoryService textDocumentFactoryService,
-            IEditorOperationsFactoryService editorOperationsFactoryService)
+            IEditorOperationsFactoryService editorOperationsFactoryService,
+            JoinableTaskFactory joinableTaskFactory)
         {
             _protectedOperations = protectedOperations;
             _textBufferFactoryService = textBufferFactoryService;
             _textEditorFactoryService = textEditorFactoryService;
             _textDocumentFactoryService = textDocumentFactoryService;
             _editorOperationsFactoryService = editorOperationsFactoryService;
+            _joinableTaskFactory = joinableTaskFactory;
         }
 
         public virtual void EnsurePackageLoaded()
