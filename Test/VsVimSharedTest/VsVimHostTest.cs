@@ -92,7 +92,8 @@ namespace Vim.VisualStudio.UnitTest
                 _factory.Create<IControlCharUtil>(MockBehavior.Loose).Object,
                 _commandDispatcher.Object,
                 sp.Object,
-                _clipboardDevice.Object);
+                _clipboardDevice.Object,
+                CompositionContainer.GetExport<IJoinableTaskFactoryProvider>().Value);
             _host = _hostRaw;
         }
 

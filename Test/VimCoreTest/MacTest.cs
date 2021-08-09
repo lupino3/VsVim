@@ -31,7 +31,8 @@ namespace Vim.UnitTest
                     if (type.FullName.StartsWith("Vim.UI.Wpf"))
                     {
                         if (type != typeof(DisplayWindowBrokerFactoryService) &&
-                            type != typeof(AlternateKeyUtil))
+                            type != typeof(AlternateKeyUtil) && 
+                            type != typeof(VimJoinableTaskFactoryProvider))
                         {
                             return false;
                         }

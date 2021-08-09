@@ -58,6 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Implementation\Misc\KeyboardDeviceImpl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Implementation\Misc\KeyMappingTimeoutHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Implementation\Misc\MouseDeviceImpl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Implementation\Misc\VimJoinableTaskFactoryProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Implementation\Mouse\VimMouseProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Implementation\Mouse\VimMouseProcessorProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Implementation\MultiSelection\MultiSelectionUtilFactory.cs" />
@@ -92,6 +93,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Implementation\WordCompletion\VimWordCompletionData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Implementation\WordCompletion\VimWordCompletionUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NullableAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VimDebug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VimHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VimKeyProcessor.cs" />
   </ItemGroup>

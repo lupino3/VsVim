@@ -47,7 +47,8 @@ namespace Vim.UnitTest
                 {
                     if (type.FullName.StartsWith("Vim.UnitTest.", StringComparison.Ordinal) ||
                         type.FullName.StartsWith("Vim.EditorHost.", StringComparison.Ordinal) ||
-                        type.FullName.StartsWith("Vim.UI.Wpf.", StringComparison.Ordinal))
+                        type.FullName.StartsWith("Vim.UI.Wpf.", StringComparison.Ordinal) ||
+                        type.FullName.StartsWith("System.Diagnostics.CodeAnalysis", StringComparison.Ordinal))
                     {
                         continue;
                     }

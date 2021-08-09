@@ -4,7 +4,6 @@
 
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);VS_SPECIFIC_2017</DefineConstants>
-    <DefineConstants Condition="'$(VsVimProjectType)' == 'EditorHost'">$(DefineConstants);VIM_SPECIFIC_TEST_HOST</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

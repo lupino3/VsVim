@@ -20,6 +20,8 @@ namespace Vim.UnitTest.Utilities
         public DispatcherSynchronizationContext DispatcherSynchronizationContext { get; }
         public bool IsRunningInThread => StaThread.ManagedThreadId == Thread.CurrentThread.ManagedThreadId;
 
+        public event EventHandler Disposing;
+
         public StaContext()
         {
             using (var staThreadStartedEvent = new ManualResetEventSlim(initialState: false))
@@ -66,6 +68,7 @@ namespace Vim.UnitTest.Utilities
         {
             if (StaThread.IsAlive)
             {
+                Disposing?.Invoke(this, EventArgs.Empty);
                 Dispatcher.InvokeShutdown();
                 StaThread.Join();
             }

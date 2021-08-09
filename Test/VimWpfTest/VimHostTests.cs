@@ -8,6 +8,7 @@ using Vim.UnitTest;
 using Vim.EditorHost;
 using Microsoft.FSharp.Core;
 using Vim.Interpreter;
+using Microsoft.VisualStudio.Threading;
 
 namespace Vim.UI.Wpf.UnitTest
 {
@@ -22,13 +23,15 @@ namespace Vim.UI.Wpf.UnitTest
                 ITextBufferFactoryService textBufferFactoryService,
                 ITextEditorFactoryService textEditorFactoryService,
                 ITextDocumentFactoryService textDocumentFactoryService,
-                IEditorOperationsFactoryService editorOperationsFactoryService) :
+                IEditorOperationsFactoryService editorOperationsFactoryService,
+                JoinableTaskFactory joinableTaskFactory) :
                 base(
                     protectedOperations,
                     textBufferFactoryService,
                     textEditorFactoryService,
                     textDocumentFactoryService,
-                    editorOperationsFactoryService)
+                    editorOperationsFactoryService,
+                    joinableTaskFactory)
             {
             }
 
@@ -156,7 +159,8 @@ namespace Vim.UI.Wpf.UnitTest
                 TextBufferFactoryService,
                 TextEditorFactoryService,
                 _textDocumentFactoryService,
-                EditorOperationsFactoryService);
+                EditorOperationsFactoryService,
+                JoinableTaskFactory);
         }
 
         public sealed class IsDirtyTest : VimHostTest

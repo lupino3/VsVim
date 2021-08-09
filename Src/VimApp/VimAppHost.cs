@@ -61,13 +61,15 @@ namespace VimApp
             IEditorOperationsFactoryService editorOperationsFactoryService,
             IContentTypeRegistryService contentTypeRegistryService,
             IFileSystem fileSystem,
-            IDirectoryUtil directoryUtil) :
+            IDirectoryUtil directoryUtil,
+            IJoinableTaskFactoryProvider joinableTaskFactoryProvider) :
             base(
                 protectedOperations,
                 textBufferFactoryService,
                 textEditorFactoryService,
                 textDocumentFactoryService,
-                editorOperationsFactoryService)
+                editorOperationsFactoryService,
+                joinableTaskFactoryProvider.JoinableTaskFactory)
         {
             _protectedOperations = protectedOperations;
             _contentTypeRegistryService = contentTypeRegistryService;

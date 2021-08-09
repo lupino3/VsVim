@@ -28,6 +28,7 @@ using Vim.Extensions;
 using Vim.EditorHost.Implementation.Misc;
 using Vim.UI.Wpf;
 using Vim.UI.Wpf.Implementation.Misc;
+using Microsoft.VisualStudio.Threading;
 
 namespace Vim.UnitTest
 {
@@ -50,6 +51,7 @@ namespace Vim.UnitTest
         public StaContext StaContext { get; }
         public Dispatcher Dispatcher => StaContext.Dispatcher;
         public DispatcherSynchronizationContext DispatcherSynchronizationContext { get; }
+        public JoinableTaskFactory JoinableTaskFactory { get; }
 
         public CompositionContainer CompositionContainer
         {
@@ -233,7 +235,25 @@ namespace Vim.UnitTest
                 throw new Exception("Invalid synchronization context on test start");
             }
 
+            // Make sure that the JTF is setup for unit testing by creating one that is attached to the 
+            // thread and context we setup for the unit tests
+            if (!VimJoinableTaskFactoryProvider.IsJoinableTaskFactoryCreated)
+            {
+                var context = new JoinableTaskContext(StaContext.StaThread, StaContext.DispatcherSynchronizationContext);
+                var factory = new JoinableTaskFactory(context);
+                VimJoinableTaskFactoryProvider.SetCustomJoinableTaskFactory(factory);
+                StaContext.Disposing += delegate
+                {
+                    context.Dispose();
+                };
+
+                Debug.Assert(VimJoinableTaskFactoryProvider.IsJoinableTaskFactoryCreated);
+            }
+
             _vimEditorHost = GetOrCreateVimEditorHost();
+
+            JoinableTaskFactory = CompositionContainer.GetExportedValue<IJoinableTaskFactoryProvider>().JoinableTaskFactory;
+
             ClipboardDevice.Text = string.Empty;
 
             // One setting we do differ on for a default is 'timeout'.  We don't want them interfering
@@ -254,6 +274,7 @@ namespace Vim.UnitTest
             // Don't show trace information in the unit tests.  It really clutters the output in an
             // xUnit run
             VimTrace.TraceSwitch.Level = TraceLevel.Off;
+
         }
 
         public virtual void Dispose()

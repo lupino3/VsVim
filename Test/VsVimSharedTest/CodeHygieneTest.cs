@@ -42,6 +42,7 @@ namespace Vim.VisualStudio.UnitTest
                 if (type.FullName.StartsWith("Xaml", StringComparison.Ordinal) ||
                     type.FullName.StartsWith("Microsoft.CodeAnalysis.EmbeddedAttribute", StringComparison.Ordinal) ||
                     type.FullName.StartsWith("System.Runtime.CompilerServices", StringComparison.Ordinal) ||
+                    type.FullName.StartsWith("System.Diagnostics.CodeAnalysis", StringComparison.Ordinal) ||
                     type.FullName.StartsWith("Vim.VisualStudio", StringComparison.Ordinal) ||
                     type.FullName.StartsWith("Vim.UI.Wpf", StringComparison.Ordinal))
                 {
